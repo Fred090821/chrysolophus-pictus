@@ -7,6 +7,7 @@ import com.birds.count.chrysolophuspictus.sensor.SensorStatus;
 import com.birds.count.chrysolophuspictus.util.DateRange;
 import com.birds.count.chrysolophuspictus.util.Range;
 import com.birds.count.chrysolophuspictus.wrapper.StatisticsWrapper;
+import org.apache.commons.lang3.EnumUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +84,7 @@ public class MetricService {
                 savedMetric = metricRepository.save(metric);
                 createdMetrics.add(savedMetric);
             } catch (Exception e) {
-                failedMetrics.add(savedMetric);
+                failedMetrics.add(metric);
             }
         }
         return Map.of("created", createdMetrics, "failed", failedMetrics);
@@ -102,8 +103,8 @@ public class MetricService {
         List<Metric> metrics;
         DateRange dateRange;
 
-        if (null == range || range.isBlank()) {
-            logger.info("No date range provided default range of last 15 minutes will apply");
+        if (null == range || range.isBlank() || !EnumUtils.isValidEnum(Range.class, range.toUpperCase())) {
+            logger.info("Invalid range provided, default range of last 15 minutes will apply");
             dateRange = DateRange.getDateRange(Range.MINUTES);
         } else {
             logger.info("Date range with value {} provided ", range);

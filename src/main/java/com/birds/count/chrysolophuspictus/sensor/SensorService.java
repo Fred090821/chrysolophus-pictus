@@ -54,9 +54,8 @@ public class SensorService {
             sensor.setIpAddress(request.getIpAddress());
             sensor.setCity(request.getCity());
         } catch (Exception ex) {
-            throw new InvalidInvalidSensorRequestException("invalid argument provided or non unique parameter(s)");
+            throw new InvalidInvalidSensorRequestException("invalid argument provided ");
         }
-
         return sensorRepository.save(sensor);
     }
 
